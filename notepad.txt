@@ -1,0 +1,72 @@
+   "github.com/aws/aws-sdk-go/aws"
+    "github.com/aws/aws-sdk-go/aws/session"
+    "github.com/aws/aws-sdk-go/service/ec2"
+
+
+
+Tools and libraries for Go
+AWS SDK for Go: the official AWS SDK for the Go programming language.
+
+github.com/aws/aws-lambda-go/lambda: The implementation of the Lambda programming model for Go. This package is used by AWS Lambda to invoke your handler.
+
+github.com/aws/aws-lambda-go/lambdacontext: Helpers for accessing context information from the context object.
+
+github.com/aws/aws-lambda-go/events: This library provides type definitions for common event source integrations.
+
+github.com/aws/aws-lambda-go/cmd/build-lambda-zip: This tool can be used to create a .zip file archive on Windows.
+
+For building purpose, refer this:
+https://github.com/aws/aws-lambda-go
+
+We first need to build the go file using commands:
+$env:GOOS = "linux"
+ $env:GOARCH = "amd64"
+$env:CGO_ENABLED = "0"
+ go build -o Handler lambda.go  
+~\Go\Bin\build-lambda-zip.exe -o lambda-handler.zip Handler
+ 
+
+PS D:\Go> ~\Go\Bin\build-lambda-zip.exe -o lambda-handler.zip Handler
+And after that add the zip file to the code,e.g.- main.zip
+After that in handler(where execution starts), add the file to be executed e.g.-main.go
+
+There are different ways to add credentials, using credentials package:
+providing them inside code and
+ giving the env variables inside lambda and accessing them in code
+
+---------------------------------------------------------------------------------------------------------------------------------
+$env:GOOS = "linux"
+ $env:GOARCH = "amd64"
+$env:CGO_ENABLED = "0"
+ go build -o Handler lambda.go  
+~\Go\Bin\build-lambda-zip.exe -o lambda-handler.zip Handler
+
+Couldn't create new instance: NoCredentialProviders: no valid providers in chain. Deprecated.
+For verbose messaging see aws.Config.CredentialsChainVerboseErrors2023/04/14 16:52:16 <nil>
+invalid memory address or nil pointer dereference
+
+input := &ec2.CreateTagsInput{
+		Resources: []*string{aws.String(instanceID)},
+		Tags: []*ec2.Tag{
+			{
+				Key:   aws.String("Name"),
+				Value: aws.String("MyInstanceName"),
+			},
+			{
+				Key:   aws.String("Environment"),
+				Value: aws.String("Production"),
+			},
+		},
+	}
+
+	// Call the CreateTags API to create the tags for the instance.
+	_, err = svc.CreateTags(input)
+	if err != nil {
+		fmt.Println("Error creating tags:", err)
+		os.Exit(1)
+	}
+
+[676634049556_AWSPowerUserAccess]
+aws_access_key_id=ASIAZ3CUIHQKDJ6QA3VZ
+aws_secret_access_key=MHbczJOjw49Y1N9oHR/iqqsT69xjolamAzxkL6nL
+aws_session_token=IQoJb3JpZ2luX2VjEGsaCXVzLXdlc3QtMiJHMEUCIHPHN8eobhPN+bj8fnMDBUAIbxcJLpwPXbuDOK+wsKXsAiEAi1taZ4ddWe3c9GM6wRpWBIgU+3/eZvQlZYDGxrdTYCMqkgMIZBABGgw2NzY2MzQwNDk1NTYiDIyieptXTSjDnnVkoCrvAqQBYJO+Bn7xEGyWqflRyIGgNNTkzftyxX1EfHFTrnUdKYuUq/Kyo3Djv0pIq3TYsZrSaJr1n19WXAjIG5ErpNSAs34KeC0bnAL+pDGLOPHdqXArX/EOZJ0GNb+yQZxEnF+ZiQtSlPEwwrh1L3MbN25kMF6EBTSTqBoWpuHu9Qr3fU6IKK3yAe9q6blad/KhBAfFDgJ7tozmORoeVb4OlVoUTBCBVmDXbVDte8ApGeofM/AaJr2Eee2HLDco6Nd2SQkJOG7rU93xgCvNwfnpn5xkoZZvCsBuiwWFIQ+QoohR00/SvInquSIaJjIXOUVUK5d/Zwlt2KUs80wTJz4NBfLK0Rlq9QeUXv05P2NncKiZqbuF02hwNx2HUADr1AT79PeytpGCkV4xlGziq5yI21XBe5/z5Zgw3hLK///1sPJJl+YVZoIbtnTIcBdxEij3L/oaNTciDkneaDjPCS3hm2479Ay3LPazP5kyG8KrkR0wqcX7oQY6pgEq9ytcaySZ9rxzcv3Cn0gGeBeeLIg8Z/ssxCJlIsirEREV9HeCIWfWUUIflNv0THTyEJnj4iXk92McDjBl0Bnj5O4k6b5V+z2nxYtgFF0JPoGY9V31boRKyc7BPGGjXF1j7EMnbREOdA4rUDrLmsEKE9dtQ81t6ydr7iQZFEcUMDzu3gPdFFuoqRP9JUZxqq+ZriLUr+awWpKj/lTUnK2XqfF9vaox
